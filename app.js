@@ -62,6 +62,40 @@ app.get('/delete/:id',async (req,res)=>{
 })
 
 
+app.get('/edit/:id', async (req,res)=>{
+    const id= req.params.id
+    const blog= await blogs.findAll({
+        where:{
+            id:id
+        }
+    })
+    res.render('editBlog.ejs',{blog:blog})
+})
+
+
+app.post('/editBlog/:id', async (req,res)=>{
+    const id= req.params.id
+    const title=req.body.title
+    const subTitle = req.body.subTitle
+    const description = req.body.description
+
+   await blogs.update({  
+        title:title,
+        subTitle: subTitle,
+        description: description
+    },
+      {
+         where:{
+        id:id
+       }
+    })
+
+    //another approach
+    //  await blogs.update(req.body,{where:{id:id}})
+
+     res.redirect('/single/' + id)
+})
+
 
 app.listen('3000',function(){
     console.log("App has started at port 3000")
